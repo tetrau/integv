@@ -41,3 +41,9 @@ class NormalizedFile:
 
     def tell(self):
         return self._file.tell()
+
+    def peek(self, size=-1):
+        position = self.tell()
+        b = self.read(size)
+        self.seek(position)
+        return b

@@ -28,6 +28,11 @@ class TestFile(TestCase):
         self.file.read(100)
         self.assertEqual(self.file.tell(), 1100)
 
+    def test_peek(self):
+        raw = self.raw[1000:1100]
+        self.file.seek(1000)
+        self.assertEqual(self.file.peek(100), self.file.peek(100), raw)
+
     def test_len(self):
         self.assertEqual(len(self.file), len(self.file), len(self.raw))
 
