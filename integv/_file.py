@@ -8,10 +8,12 @@ SEEK_END = io.SEEK_END
 
 class NormalizedFile:
     def __init__(self, file):
+        self._close_on_del = False
         if isinstance(file, bytes):
             self._file = io.BytesIO(file)
         elif isinstance(file, str) or isinstance(file, os.PathLike):
             self._file = open(file, "rb")
+            self._close_on_del = True
         elif hasattr(file, "read"):
             self._file = file
         else:
@@ -29,6 +31,10 @@ class NormalizedFile:
             return self._length
         else:
             return self._length
+
+    def __del__(self):
+        if self._close_on_del:
+            self.close()
 
     def read(self, size=-1):
         return self._file.read(size)
