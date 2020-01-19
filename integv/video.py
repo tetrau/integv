@@ -12,7 +12,10 @@ class MP4IntegrityVerifier(_IntegrityVerifierBase):
         except _struct.error:
             return None
         f.seek(chunk_size, _file.SEEK_CUR)
-        return chunk_size
+        if chunk_size < 4:
+            return None
+        else:
+            return chunk_size
 
     def verify(self, file):
         chunk_size_sum = 0
