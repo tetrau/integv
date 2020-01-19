@@ -33,6 +33,7 @@ class TestVerifierMixin:
         self.verifier = self.create_verifier()
 
     def test_verifier(self):
+        self.assertTrue(self.verifier.verify(self.sample))
         self.assertFalse(self.verifier.verify(self.sample[:-1]))
         passed = [self.verifier.verify(s) for s in self.bad_samples]
         self.assertGreater(len([p for p in passed if p]), 0)

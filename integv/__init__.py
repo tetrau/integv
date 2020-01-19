@@ -33,3 +33,10 @@ class _IntegrityVerifierBase:
 
     def _peek_uint32_be(self, f):
         return self.__peek_unpack_one(f, 4, ">L")
+
+    @staticmethod
+    def __read_unpack_one(f, size, fmt):
+        return _struct.unpack(fmt, f.read(size))[0]
+
+    def _read_uint32_le(self, f):
+        return self.__read_unpack_one(f, 4, "<L")
