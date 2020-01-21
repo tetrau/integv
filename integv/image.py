@@ -1,5 +1,6 @@
 import struct as _struct
 from . import _IntegrityVerifierBase
+import integv._file as _file
 
 
 class WEBPIntegrityVerifier(_IntegrityVerifierBase):
@@ -16,3 +17,13 @@ class WEBPIntegrityVerifier(_IntegrityVerifierBase):
         if size + 8 != len(file):
             return False
         return True
+
+
+class JPEGIntegrityVerifier(_IntegrityVerifierBase):
+    MIME = "image/jpeg"
+
+    def verify(self, file):
+        start_of_image = file.read(3)
+        file.seek(-2, _file.SEEK_END)
+        end_of_image = file.read()
+        return start_of_image == b"\xFF\xD8\xFF" and end_of_image == b"\xFF\xD9"
