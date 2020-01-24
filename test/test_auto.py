@@ -56,6 +56,5 @@ class TestVerifierAuto(TestCase):
         self.assertGreater(len([p for p in passed if p]), 0)
 
     def test_verifier(self):
-        print(self.sample_paths)
         for sample_file in self.sample_paths:
             self._test_one_sample(sample_file)

@@ -3,6 +3,7 @@ import functools as _functools
 import weakref as _weakref
 import integv._file as _file
 
+
 class _IntegrityVerifierBase:
     _MIME_MAPPING = _weakref.WeakValueDictionary()
 
@@ -40,3 +41,5 @@ class _IntegrityVerifierBase:
     def _read_uint32_le(self, f):
         return self.__read_unpack_one(f, 4, "<L")
 
+    def _read_uint32_be(self, f):
+        return self.__read_unpack_one(f, 4, ">L")
