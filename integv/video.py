@@ -1,4 +1,4 @@
-from . import _IntegrityVerifierBase
+from ._base import _IntegrityVerifierBase
 import integv._file as _file
 import struct as _struct
 
