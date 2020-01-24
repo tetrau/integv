@@ -34,6 +34,9 @@ class _IntegrityVerifierBase:
     def _peek_uint32_be(self, f):
         return self.__peek_unpack_one(f, 4, ">L")
 
+    def _peek_unit8(self, f):
+        return self.__peek_unpack_one(f, 1, "B")
+
     @staticmethod
     def __read_unpack_one(f, size, fmt):
         return _struct.unpack(fmt, f.read(size))[0]
