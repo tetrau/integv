@@ -8,3 +8,4 @@
 | test/sample/image/sample.webp | Benjamin Gimmel, BenHur [CC BY-SA](http://creativecommons.org/licenses/by-sa/3.0/), converted to webp by Google |
 | test/sample/image/sample.jpg  | Benjamin Gimmel, BenHur [CC BY-SA](http://creativecommons.org/licenses/by-sa/3.0/)                              |
 | test/sample/image/sample.png  | Benjamin Gimmel, BenHur [CC BY-SA](http://creativecommons.org/licenses/by-sa/3.0/)                              |
+| test/sample/image/sample.gif  | DemonDeLuxe (Dominique Toussaint) [CC BY-SA](http://creativecommons.org/licenses/by-sa/3.0/)                    |

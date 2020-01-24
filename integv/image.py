@@ -60,3 +60,17 @@ class PNGIntegrityVerifier(_IntegrityVerifierBase):
             else:
                 total_size += chunk_length
         return total_size == len(file)
+
+
+class GIFIntegrityVerifier(_IntegrityVerifierBase):
+    MIME = "image/gif"
+
+    def verify(self, file):
+        header = file.read(6)
+        if header not in (b"GIF87a", b"GIF89a"):
+            return False
+        file.seek(-1, _file.SEEK_END)
+        trailer = file.read()
+        if trailer != b";":
+            return False
+        return True
