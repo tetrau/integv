@@ -1,7 +1,10 @@
 import mimetypes as _mimetypes
+import os as _os
 from ._base import _IntegrityVerifierBase
 import integv.video
 import integv.image
+
+_mimetypes.init([_os.path.join(_os.path.split(__file__)[0], "mime.types")])
 
 
 class FileIntegrityVerifier(_IntegrityVerifierBase):
