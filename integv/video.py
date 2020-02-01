@@ -1,4 +1,5 @@
 from ._base import _IntegrityVerifierBase
+from .exception import UndecidableError
 import integv._file as _file
 import struct as _struct
 
@@ -31,9 +32,6 @@ class MP4IntegrityVerifier(_IntegrityVerifierBase):
 class MKVIntegrityVerifier(_IntegrityVerifierBase):
     MIME = "video/x-matroska"
 
-    class ElementSizeUnknown(ValueError):
-        pass
-
     @staticmethod
     def _leading_zero_bit(x):
         return 10 - len(bin(x))
@@ -41,8 +39,8 @@ class MKVIntegrityVerifier(_IntegrityVerifierBase):
     def _read_vint(self, file):
         first_char = self._peek_unit8(file)
         if first_char == 0xFF:
-            raise self.ElementSizeUnknown("Can't verify MKV/WEBM files contain "
-                                          "elements with no known size")
+            raise UndecidableError("Can't verify MKV/WEBM files contain "
+                                   "elements with no known size")
         if first_char == 0:
             return None, None
         vint_length = self._leading_zero_bit(first_char) + 1

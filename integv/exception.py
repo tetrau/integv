@@ -1,0 +1,2 @@
+class UndecidableError(ValueError):
+    pass
