@@ -1,6 +1,7 @@
 import struct as _struct
 import functools as _functools
 import weakref as _weakref
+import zlib as _zlib
 import integv._file as _file
 
 
@@ -19,6 +20,9 @@ class _IntegrityVerifierBase:
                     return original_verify(self, file, *args, **kwargs)
 
                 cls.verify = wrapper
+
+    def __init__(self, slow=False):
+        self.slow = slow
 
     @staticmethod
     def _prepare_file(file):
@@ -46,3 +50,10 @@ class _IntegrityVerifierBase:
 
     def _read_uint32_be(self, f):
         return self.__read_unpack_one(f, 4, ">L")
+
+    def _read_unit8(self, f):
+        return self.__read_unpack_one(f, 1, "B")
+
+    @staticmethod
+    def _crc32(*args, **kwargs):
+        return _zlib.crc32(*args, **kwargs)

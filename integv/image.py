@@ -1,5 +1,4 @@
 import struct as _struct
-import zlib as _zlib
 from ._base import _IntegrityVerifierBase
 from ._common import _RIFFIntegrityVerifier
 import integv._file as _file
@@ -33,7 +32,7 @@ class PNGIntegrityVerifier(_IntegrityVerifierBase):
             chunk_crc = self._read_uint32_be(file)
         except _struct.error:
             return None
-        if _zlib.crc32(chunk_type + chunk_data) != chunk_crc:
+        if self._crc32(chunk_type + chunk_data) != chunk_crc:
             return None
         return chunk_length + 12
 

@@ -1,4 +1,5 @@
 from ._base import _IntegrityVerifierBase
+import struct as _struct
 
 
 class _RIFFIntegrityVerifier(_IntegrityVerifierBase):

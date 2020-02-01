@@ -4,11 +4,10 @@ import os
 
 
 class TestVerifierAuto(TestCase):
-    def create_verifier(self):
-        raise NotImplementedError()
-
-    def sample_file_relevant_path(self):
-        raise NotImplementedError()
+    @staticmethod
+    def read_sample(sample_file):
+        with open(sample_file, "rb") as f:
+            return f.read()
 
     def create_bad_samples(self, sample):
         bad_samples = []
@@ -29,6 +28,11 @@ class TestVerifierAuto(TestCase):
             bad_samples.append(b)
         return bad_samples
 
+    @staticmethod
+    def gen_bad_fragment(b, n=4096):
+        for i in range(n):
+            yield b[:i]
+
     def setUp(self):
         self.sample_paths = []
         sample_folder = os.path.join(os.path.split(__file__)[0], "sample")
@@ -44,7 +48,8 @@ class TestVerifierAuto(TestCase):
                     os.path.join(abs_sample_sub_folder, sample_file))
         self.verifier = FileIntegrityVerifier()
 
-    def _test_one_sample(self, sample_file):
+    def _test_one_sample(self, sample_file, slow=False):
+        self.verifier.slow = slow
         file_type = self.verifier.guess_type(sample_file)
         with open(sample_file, "rb") as f:
             sample = f.read()
@@ -58,3 +63,22 @@ class TestVerifierAuto(TestCase):
     def test_verifier(self):
         for sample_file in self.sample_paths:
             self._test_one_sample(sample_file)
+            self._test_one_sample(sample_file, slow=True)
+            self._test_bad_fragment(sample_file)
+
+    def _test_bad_fragment(self, sample_file):
+        file_type = self.verifier.guess_type(sample_file)
+        file = self.read_sample(sample_file)
+
+        def error_count():
+            result = [self.verifier.verify(f, file_type=file_type)
+                      for f in self.gen_bad_fragment(file)]
+            return result.count(lambda x: x)
+
+        self.verifier.slow = False
+        error = error_count()
+        self.verifier.slow = True
+        error_slow = error_count()
+        self.assertLess(error, 4)
+        self.assertLess(error_slow, 4)
+        self.assertLessEqual(error_slow, error)
