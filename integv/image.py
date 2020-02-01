@@ -1,23 +1,12 @@
 import struct as _struct
 import zlib as _zlib
 from ._base import _IntegrityVerifierBase
+from ._common import _RIFFIntegrityVerifier
 import integv._file as _file
 
 
-class WEBPIntegrityVerifier(_IntegrityVerifierBase):
+class WEBPIntegrityVerifier(_RIFFIntegrityVerifier):
     MIME = "image/webp"
-
-    def verify(self, file):
-        riff = file.read(4)
-        if riff != b"RIFF":
-            return False
-        try:
-            size = self._read_uint32_le(file)
-        except _struct.error:
-            return False
-        if size + 8 != len(file):
-            return False
-        return True
 
 
 class JPEGIntegrityVerifier(_IntegrityVerifierBase):
