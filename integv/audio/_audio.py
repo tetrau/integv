@@ -1,6 +1,6 @@
 import struct as _struct
-from . import _IntegrityVerifierBase
-from ._common import _RIFFIntegrityVerifier
+from .. import _IntegrityVerifierBase
+from .._common import _RIFFIntegrityVerifier
 
 
 class WAVIntegrityVerifier(_RIFFIntegrityVerifier):

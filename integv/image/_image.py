@@ -1,6 +1,6 @@
 import struct as _struct
-from ._base import _IntegrityVerifierBase
-from ._common import _RIFFIntegrityVerifier
+from .._base import _IntegrityVerifierBase
+from .._common import _RIFFIntegrityVerifier
 import integv._file as _file
 
 

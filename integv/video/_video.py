@@ -1,5 +1,5 @@
-from ._base import _IntegrityVerifierBase
-from .exception import UndecidableError
+from .._base import _IntegrityVerifierBase
+from ..exception import UndecidableError
 import integv._file as _file
 import struct as _struct
 
