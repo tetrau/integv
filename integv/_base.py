@@ -5,7 +5,7 @@ import zlib as _zlib
 import integv._file as _file
 
 
-class RegisterMeta(type):
+class _RegisterMeta(type):
     def __new__(mcs, *args, **kwargs):
         cls = super().__new__(mcs, *args, **kwargs)
         if hasattr(cls, "MIME") and hasattr(cls, "_MIME_MAPPING"):
@@ -22,7 +22,7 @@ class RegisterMeta(type):
         return cls
 
 
-class _IntegrityVerifierBase(metaclass=RegisterMeta):
+class _IntegrityVerifierBase(metaclass=_RegisterMeta):
     _MIME_MAPPING = _weakref.WeakValueDictionary()
 
     def __init__(self, slow=False):

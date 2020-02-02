@@ -1,5 +1,6 @@
 from unittest import TestCase
 from integv import FileIntegrityVerifier
+from integv.video import WEBMIntegrityVerifier, MP4IntegrityVerifier
 
 
 class TestInterface(TestCase):
@@ -11,3 +12,11 @@ class TestInterface(TestCase):
                           lambda: self.verifier.verify(b"", "NotImplemented"))
         self.assertRaises(ValueError, lambda: self.verifier.verify(""))
         self.assertRaises(ValueError, lambda: self.verifier.verify(b""))
+
+    def test_verifier_lookup(self):
+        self.assertIs(self.verifier._get_verifier_class("video/webm"),
+                      WEBMIntegrityVerifier)
+        self.assertIs(self.verifier._get_verifier_class("webm"),
+                      WEBMIntegrityVerifier)
+        self.assertIs(self.verifier._get_verifier_class("m4v"),
+                      MP4IntegrityVerifier)
