@@ -5,21 +5,25 @@ import zlib as _zlib
 import integv._file as _file
 
 
-class _IntegrityVerifierBase:
-    _MIME_MAPPING = _weakref.WeakValueDictionary()
-
-    def __init_subclass__(cls, **kwargs):
-        if hasattr(cls, "MIME"):
+class RegisterMeta(type):
+    def __new__(mcs, *args, **kwargs):
+        cls = super().__new__(mcs, *args, **kwargs)
+        if hasattr(cls, "MIME") and hasattr(cls, "_MIME_MAPPING"):
             cls._MIME_MAPPING[cls.MIME] = cls
             if hasattr(cls, "verify"):
                 original_verify = cls.verify
 
                 @_functools.wraps(original_verify)
-                def wrapper(self, file, *args, **kwargs):
+                def wrapper(self, file):
                     file = _IntegrityVerifierBase._prepare_file(file)
-                    return original_verify(self, file, *args, **kwargs)
+                    return original_verify(self, file)
 
                 cls.verify = wrapper
+        return cls
+
+
+class _IntegrityVerifierBase(metaclass=RegisterMeta):
+    _MIME_MAPPING = _weakref.WeakValueDictionary()
 
     def __init__(self, slow=False):
         self.slow = slow
