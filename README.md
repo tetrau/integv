@@ -7,6 +7,11 @@
  is to detect file corruption (mostly shortened) during file download caused by 
  network glitch. But integv still can be used for many other purposes as well.
  
+ # Installation
+ ```bash
+pip install integv
+```
+ 
  # Quick Start
  ```python
 import integv

@@ -28,6 +28,17 @@ class FileIntegrityVerifier(_IntegrityVerifierBase):
         return verifier
 
     def verify(self, file, file_type=None):
+        """
+        Verify the integrity of the file.
+
+        :param file:      file input, should be bytes or binary file-like object.
+                          It can also be str or os.PathLike as a file path
+                          representing a file on the file system.
+        :param file_type: the type of file, either be a simple file extension
+                          like 'mp4' or a full MIME type like 'video/mp4'.
+        :return:          False if the file is corrupted. True if the file has
+                          passed the integrity check.
+        """
         if file_type is None:
             if not isinstance(file, str):
                 raise ValueError("file_type is required for binary input")

@@ -26,6 +26,10 @@ class _IntegrityVerifierBase(metaclass=_RegisterMeta):
     _MIME_MAPPING = _weakref.WeakValueDictionary()
 
     def __init__(self, slow=False):
+        """
+        :param slow: Enable some sophisticated methods of verification. Will
+                     reduce the false negative rate but consume more time.
+        """
         self.slow = slow
 
     @staticmethod
