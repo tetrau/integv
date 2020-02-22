@@ -1,4 +1,6 @@
 # integv
+[![codecov](https://codecov.io/gh/tetrau/integv/branch/master/graph/badge.svg)](https://codecov.io/gh/tetrau/integv) [![unittest](https://github.com/tetrau/integv/workflows/unittest/badge.svg)](https://github.com/tetrau/integv)
+
  integv is a file integrity verifier based on the format of the file. It's 
  capable of checking the integrity of multiple types of files without any 
  additional information like Content-Length or checksum. The main goal of integv
