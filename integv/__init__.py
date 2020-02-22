@@ -6,7 +6,7 @@ import integv.video
 import integv.image
 import integv.audio
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 SUPPORTED_MIME_TYPES = tuple(_IntegrityVerifierBase._MIME_MAPPING.keys())
 _mimetypes.init([_os.path.join(_os.path.split(__file__)[0], "mime.types")])
