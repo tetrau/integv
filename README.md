@@ -1,5 +1,5 @@
 # integv
-[![codecov](https://codecov.io/gh/tetrau/integv/branch/master/graph/badge.svg)](https://codecov.io/gh/tetrau/integv) [![unittest](https://github.com/tetrau/integv/workflows/unittest/badge.svg)](https://github.com/tetrau/integv)
+[![python versions](https://img.shields.io/pypi/v/integv)](https://pypi.org/project/integv) [![python versions](https://img.shields.io/pypi/pyversions/integv)](https://pypi.org/project/integv) [![codecov](https://img.shields.io/codecov/c/github/tetrau/integv)](https://codecov.io/gh/tetrau/integv) [![unittest](https://github.com/tetrau/integv/workflows/unittest/badge.svg)](https://github.com/tetrau/integv)
 
  integv is a file integrity verifier based on the format of the file. It's 
  capable of checking the integrity of multiple types of files without any 
