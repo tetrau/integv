@@ -1,5 +1,6 @@
 from .._base import _IntegrityVerifierBase
 from ..exception import UndecidableError
+from .._common import _RIFFIntegrityVerifier
 import integv._file as _file
 import struct as _struct
 
@@ -77,3 +78,7 @@ class MKVIntegrityVerifier(_IntegrityVerifierBase):
 
 class WEBMIntegrityVerifier(MKVIntegrityVerifier):
     MIME = "video/webm"
+
+
+class AVIIntegrityVerifier(_RIFFIntegrityVerifier):
+    MIME = "video/vnd.avi"
