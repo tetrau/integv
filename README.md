@@ -34,6 +34,7 @@ key points in the file, so integv is much faster than other solutions that try
 to decode the file.
 
 Here's a comparison of verifying a 70 MB mp4 file using integv and FFmpeg.
+integv only takes about 60 microseconds, FFmpeg takes about 10 seconds.
 
  ```
 python3 -m timeit "import integv;integv.FileIntegrityVerifier().verify('../test.mp4')"
