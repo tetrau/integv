@@ -7,12 +7,43 @@
  is to detect file corruption (mostly shortened) during file download caused by 
  network glitch. But integv still can be used for many other purposes as well.
  
- # Installation
+# Installation
+
  ```bash
 pip install integv
 ```
  
- # Quick Start
+# Why integv
+
+Sometimes when you download some media files using `requests`, a network glitch 
+happens and your file downloaded is corrupted. If there's a `Content-Length` 
+header, you can compare it to the downloaded file size. But the worst thing is 
+most of the time, media files are served using HTTP chunked transfer encoding, 
+and there's no `Content-Length` header. So you don't know if the download file 
+is good or not. And that's the time integv comes to help, just feed the 
+downloaded file to integv and it can verify the integrity of the file with zero 
+other information like `Content-Length`. All integv needs are the type of the file.
+ 
+integv has many advantages.
+
+1. integv is light, integv is written in pure python with 0 dependencies. Which 
+makes integv portable and easy to integrate into your project.
+
+2. integv is fast, integv does not try to decode the file, it just checks all the 
+key points in the file, so integv is much faster than other solutions that try
+to decode the file.
+
+Here's a comparison of verifying a 70 MB mp4 file using integv and FFmpeg.
+
+ ```
+python3 -m timeit "import integv;integv.FileIntegrityVerifier().verify('../test.mp4')"
+5000 loops, best of 5: 61.4 usec per loop
+
+python3 -m timeit "import subprocess;subprocess.run('ffmpeg -v error -i ../test.mp4 -f null -', shell=True)"
+1 loop, best of 5: 11.2 sec per loop
+```
+
+# Quick Start
  ```python
 import integv
 
@@ -76,6 +107,106 @@ network. Some types of files like png contain checksum inside, which is less
 error-prone. By all means, do not use integv for any kind of security 
 verification. As a bad file which passes the verification can be simply forged.
 
+### Effectiveness of integv on different types of corruption
+#### Types of corruption:
+* **S**mall **D**eletion at the **E**nd of the file. (**SDE**)
+
+A few bytes of data were deleted at the end of the file. The length of the file 
+is reduced.
+```
+Original file:  ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXY
+```
+
+* **L**arge **D**eletion at the **E**nd of the file. (**LDE**)
+
+A large chunk of data was deleted at the end of the file. The length of the 
+file is reduced.
+```
+Original file:  ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNO
+```
+
+* **S**mall **S**ubstitution at the **E**nd of the file. (**SSE**)
+
+A few bytes of data were substituted at the end of file. The length of the file 
+remains the same.
+```
+Original file:  ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYA
+```
+
+* **L**arge **S**ubstitution at the **E**nd of the file. (**LSE**)
+
+A large chunk of data was substituted at the end of file. The length of the 
+file remains the same.
+```
+Original file:  ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNAAAAAAAAAAAA
+```
+
+* **S**mall **D**eletion at a **R**andom position of the file. (**SDR**)
+
+A few bytes of data were deleted at a random position of the file. The length of 
+the file is reduced.
+
+```
+Original file:  ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLNOPQRSTUVWXYZ
+                                                      ^
+```
+
+* **L**arge **D**eletion at a **R**andom position of the file. (**LDR**)
+
+A large chunk of data was deleted at a random position of the file. The length 
+of the file is reduced.
+
+```
+Original file:  ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLYZ
+                                                      ^
+```
+
+* **S**mall **S**ubstitution at a **R**andom position of the file. (**SSR**)
+
+A few bytes of data were substituted at a random position of the file. The length
+of the file remains the same.
+
+```
+Original file:  ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLANOPQRSTUVWXYZ
+                                                      ^
+```
+
+* **L**arge **S**ubstitution at a **R**andom position of the file. (**LSR**)
+
+A large chunk of data wass substituted at a random position of the file. The 
+length of the file remains the same.
+
+```
+Original file:  ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLAAAAAAAAAAWXYZ
+                                                      ^
+```
+
+#### Effectiveness Table
+From my personal experience, the most common types of corruption happen during
+file downloading using `requests` or similar things are **SDE** and **LDE**.
+
+|           |    SDE   |    LDE   |     SSE    |     LSE    |     SDR    |     LDR    |     SSR    |     LSR    |
+|-----------|:--------:|:--------:|:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|
+| mp4       | :smiley: | :smiley: | :frowning: |  :smiley:  |  :smiley:  |  :smiley:  | :frowning: |  :smiley:  |
+| mkv       | :smiley: | :smiley: | :frowning: |  :smiley:  |  :smiley:  |  :smiley:  | :frowning: |  :smiley:  |
+| webm      | :smiley: | :smiley: | :frowning: |  :smiley:  |  :smiley:  |  :smiley:  | :frowning: |  :smiley:  |
+| avi       | :smiley: | :smiley: | :frowning: | :frowning: |  :smiley:  |  :smiley:  | :frowning: | :frowning: |
+| flv       | :smiley: | :smiley: |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  | :frowning: |  :smiley:  |
+| jpeg      | :smiley: | :smiley: |  :smiley:  |  :smiley:  | :frowning: | :frowning: | :frowning: | :frowning: |
+| png       | :smiley: | :smiley: |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |
+| gif       | :smiley: | :smiley: |  :smiley:  |  :smiley:  | :frowning: | :frowning: | :frowning: | :frowning: |
+| webp      | :smiley: | :smiley: | :frowning: | :frowning: |  :smiley:  |  :smiley:  | :frowning: | :frowning: |
+| wav       | :smiley: | :smiley: | :frowning: | :frowning: |  :smiley:  |  :smiley:  | :frowning: | :frowning: |
+| ogg       | :smiley: | :smiley: | :frowning: |  :smiley:  |  :smiley:  |  :smiley:  | :frowning: |  :smiley:  |
+| ogg(slow) | :smiley: | :smiley: |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |
 
 # Advanced Usage
 ## Specialized File Integrity Verifier
