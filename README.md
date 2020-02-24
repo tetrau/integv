@@ -107,8 +107,8 @@ network. Some types of files like png contain checksum inside, which is less
 error-prone. By all means, do not use integv for any kind of security 
 verification. As a bad file which passes the verification can be simply forged.
 
-### Effectiveness of integv on different types of corruption
-#### Types of corruption:
+## Effectiveness of integv on different types of corruption
+### Types of corruption:
 * **S**mall **D**eletion at the **E**nd of the file. (**SDE**)
 
 A few bytes of data were deleted at the end of the file. The length of the file 
@@ -189,7 +189,7 @@ Corrupted file: ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLAAAAAAAAAAWXYZ
                                                       ^
 ```
 
-#### Effectiveness Table
+### Effectiveness Table
 From my personal experience, the most common types of corruption happen during
 file downloading using `requests` or similar things are **SDE** and **LDE**.
 
