@@ -1,5 +1,5 @@
 # integv
-[![python versions](https://img.shields.io/pypi/v/integv)](https://pypi.org/project/integv) [![python versions](https://img.shields.io/pypi/pyversions/integv)](https://pypi.org/project/integv) [![codecov](https://img.shields.io/codecov/c/github/tetrau/integv)](https://codecov.io/gh/tetrau/integv) [![unittest](https://github.com/tetrau/integv/workflows/unittest/badge.svg)](https://github.com/tetrau/integv)
+[![pypi versions](https://img.shields.io/pypi/v/integv)](https://pypi.org/project/integv) [![python versions](https://img.shields.io/pypi/pyversions/integv)](https://pypi.org/project/integv) [![codecov](https://img.shields.io/codecov/c/github/tetrau/integv)](https://codecov.io/gh/tetrau/integv) [![unittest](https://github.com/tetrau/integv/workflows/unittest/badge.svg)](https://github.com/tetrau/integv)
 
  integv is a file integrity verifier based on the format of the file. It's 
  capable of checking the integrity of multiple types of files without any 
@@ -48,6 +48,10 @@ verifier.verify(file_path) # True
 * **mkv:** `video/x-matroska`
 * **webm:** `video/webm`
 * **avi:** `video/vnd.avi`
+* **flv\*:** `video/x-flv` 
+
+\* not f4v. Basically, f4v is just mp4 with a different name.
+For f4v files, use mp4 integrity verifier.
 
 ### Image
 
@@ -111,6 +115,7 @@ slow_verifier.verify(file_path) # also True, but slower
 | test/sample/video/sample.webm       | U.S. Geological Survey (USGS) [Public domain]                                                                                                    |
 | test/sample/video/sample.mkv        | (c) copyright 2008, Blender Foundation / www.bigbuckbunny.org, converted by [Matroska-Org](https://github.com/Matroska-Org/matroska-test-files)  |
 | test/sample/video/sample.avi        | U.S. Geological Survey (USGS) [Public domain], converted to avi by ffmpeg                                                                        |
+| test/sample/video/sample.flv        | U.S. Geological Survey (USGS) [Public domain], converted to flv by ffmpeg                                                                        |
 | test/sample/image/sample.webp       | Benjamin Gimmel, BenHur [CC BY-SA](http://creativecommons.org/licenses/by-sa/3.0/), converted to webp by Google                                  |
 | test/sample/image/sample.jpg        | Benjamin Gimmel, BenHur [CC BY-SA](http://creativecommons.org/licenses/by-sa/3.0/)                                                               |
 | test/sample/image/sample.png        | Benjamin Gimmel, BenHur [CC BY-SA](http://creativecommons.org/licenses/by-sa/3.0/)                                                               |

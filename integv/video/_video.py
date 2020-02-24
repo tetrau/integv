@@ -82,3 +82,41 @@ class WEBMIntegrityVerifier(MKVIntegrityVerifier):
 
 class AVIIntegrityVerifier(_RIFFIntegrityVerifier):
     MIME = "video/vnd.avi"
+
+
+class FLVIntegrityVerifier(_IntegrityVerifierBase):
+    MIME = "video/x-flv"
+
+    def _check_chunk(self, file):
+        try:
+            file.seek(1, _file.SEEK_CUR)
+            payload_size = b"\x00" + file.read(3)
+            payload_size = _struct.unpack(">L", payload_size)[0]
+            file.seek(7 + payload_size, _file.SEEK_CUR)
+            self_size = self._read_uint32_be(file)
+            if self_size != payload_size + 11:
+                return None
+            return 15 + payload_size
+        except _struct.error:
+            return None
+
+    def verify(self, file):
+        header = file.read(5)
+        if header[:4] != b"FLV\x01":
+            return False
+        try:
+            header_size = self._read_uint32_be(file)
+        except _struct.error:
+            return False
+        file.seek(0)
+        file.seek(header_size)
+        if file.read(4) != b"\x00" * 4:
+            return False
+        chunk_size_sum = 0
+        while True:
+            chunk_size = self._check_chunk(file)
+            if chunk_size is None:
+                break
+            else:
+                chunk_size_sum += chunk_size
+        return chunk_size_sum + header_size + 4 == len(file)
