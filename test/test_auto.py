@@ -66,6 +66,12 @@ class TestVerifierAuto(TestCase):
             self._test_one_sample(sample_file, slow=True)
             self._test_bad_fragment(sample_file)
 
+    def test_verifier_artificial_sample(self):
+        for verifier_cls in self.verifier._MIME_MAPPING.values():
+            for slow in (True, False):
+                verifier = verifier_cls(slow=slow)
+                self.assertFalse(verifier.verify(b""))
+
     def _test_bad_fragment(self, sample_file):
         file_type = self.verifier.guess_type(sample_file)
         file = self.read_sample(sample_file)

@@ -12,13 +12,21 @@ class _RegisterMeta(type):
             cls._MIME_MAPPING[cls.MIME] = cls
             if hasattr(cls, "verify"):
                 original_verify = cls.verify
+                cls_name = cls.__name__
 
                 @_functools.wraps(original_verify)
-                def wrapper(self, file):
+                def verify(self, file=None):
+                    if not isinstance(self, _IntegrityVerifierBase):
+                        raise TypeError(
+                            "{0}.verify is not a class method, create a {0} "
+                            "instance to verify the file.".format(cls_name))
+
                     file = _IntegrityVerifierBase._prepare_file(file)
+                    if len(file) == 0:
+                        return False
                     return original_verify(self, file)
 
-                cls.verify = wrapper
+                cls.verify = verify
         return cls
 
 

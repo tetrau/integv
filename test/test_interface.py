@@ -20,3 +20,13 @@ class TestInterface(TestCase):
                       WEBMIntegrityVerifier)
         self.assertIs(self.verifier._get_verifier_class("m4v"),
                       MP4IntegrityVerifier)
+
+    def test_class_method_error(self):
+        msg = "FileIntegrityVerifier.verify is not a class method, create a " \
+              "FileIntegrityVerifier instance to verify the file."
+        with self.assertRaises(TypeError, msg=msg):
+            FileIntegrityVerifier.verify(b"", "mp4")
+        msg = "MP4IntegrityVerifier.verify is not a class method, create a " \
+              "MP4IntegrityVerifier instance to verify the file."
+        with self.assertRaises(TypeError, msg=msg):
+            MP4IntegrityVerifier.verify(b"")

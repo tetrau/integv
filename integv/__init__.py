@@ -6,7 +6,7 @@ import integv.video
 import integv.image
 import integv.audio
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 SUPPORTED_MIME_TYPES = tuple(_IntegrityVerifierBase._MIME_MAPPING.keys())
 _mimetypes.init([_os.path.join(_os.path.split(__file__)[0], "mime.types")])
@@ -39,6 +39,10 @@ class FileIntegrityVerifier(_IntegrityVerifierBase):
         :return:          False if the file is corrupted. True if the file has
                           passed the integrity check.
         """
+        if not isinstance(self, _IntegrityVerifierBase):
+            raise TypeError(
+                "{0}.verify is not a class method, create a {0} "
+                "instance to verify the file.".format("FileIntegrityVerifier"))
         if file_type is None:
             if not isinstance(file, str):
                 raise ValueError("file_type is required for binary input")
