@@ -1,4 +1,5 @@
 from unittest import TestCase
+import integv
 from integv import FileIntegrityVerifier
 from integv.video import WEBMIntegrityVerifier, MP4IntegrityVerifier
 
@@ -30,3 +31,8 @@ class TestInterface(TestCase):
               "MP4IntegrityVerifier instance to verify the file."
         with self.assertRaises(TypeError, msg=msg):
             MP4IntegrityVerifier.verify(b"")
+
+    def test_shortcut(self):
+        file = "./test/sample/video/sample.mp4"
+        self.assertEqual(integv.verify(file),
+                         integv.FileIntegrityVerifier().verify(file))

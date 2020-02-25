@@ -53,23 +53,20 @@ file_path = "./test/sample/video/sample.mp4"
 with open(file_path, "rb") as f:
     file = f.read()
 
-# initiate a verifier
-verifier = integv.FileIntegrityVerifier()
-
 # verify using the file and file_type
 # file_type can be a simple filename extension like "mp4" or "jpg"
 # or you can provide a full MIME type like "video/mp4" or "image/jpeg"
-verifier.verify(file, file_type="mp4") # True
+integv.verify(file, file_type="mp4") # True
 
 # a corrupted file (in this case, shortened by one byte) will not pass the verification
-verifier.verify(file[:-1], file_type="mp4") # False
+integv.verify(file[:-1], file_type="mp4") # False
 
 # the file input for the verifier can be bytes or a binary file like object
-verifier.verify(open(file_path, "rb"), file_type="mp4") # True
+integv.verify(open(file_path, "rb"), file_type="mp4") # True
 
 # it can also be a string representing a file path
 # if the file path contains a proper filename extension, the file_type is not needed.
-verifier.verify(file_path) # True
+integv.verify(file_path) # True
 ```
 
 # Supported types
@@ -99,7 +96,7 @@ For f4v files, use mp4 integrity verifier.
 
 # Limitation of integv
 The integv verifier only checks the file by the format information embedded in 
-file like file size in header, chuck size in chuck header, end of file markers,
+file like file size in header, chunk size in chunk header, end of file markers,
 etc. It does not try to decode the file which makes integv fast and simple.
 But that also means the possibility of false negative (corrupted files can't be 
 detected). The baseline of all integv file integrity verifiers must be extremely 
@@ -210,6 +207,17 @@ file downloading using `requests` or similar things are **SDE** and **LDE**.
 | ogg(slow) | :smiley: | :smiley: |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |  :smiley:  |
 
 # Advanced Usage
+## Using a FileIntegrityVerifier object
+You can use a FileIntegrityVerifier object to verify your file just like 
+`integv.verify`.
+
+```python
+from integv import FileIntegrityVerifier
+
+verifier = FileIntegrityVerifier()
+verifier.verify("./test/sample/video/sample.mp4") # True
+```
+
 ## Specialized File Integrity Verifier
 There are some specialized file integrity verifier for different types of files.
 You can find them in `integv.video`, `integv.image` and `integv.audio`. They are

@@ -6,7 +6,7 @@ import integv.video
 import integv.image
 import integv.audio
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
 
 SUPPORTED_MIME_TYPES = tuple(_IntegrityVerifierBase._MIME_MAPPING.keys())
 _mimetypes.init([_os.path.join(_os.path.split(__file__)[0], "mime.types")])
@@ -51,3 +51,7 @@ class FileIntegrityVerifier(_IntegrityVerifierBase):
             raise ValueError("Unknown file type for file {}".format(file))
         verifier_cls = self._get_verifier_class(file_type)
         return verifier_cls(slow=self.slow).verify(file)
+
+
+def verify(file, file_type=None):
+    return FileIntegrityVerifier().verify(file, file_type)
